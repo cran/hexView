@@ -226,7 +226,8 @@ as.character.rawBlock <- function(x, width=NULL, machine=NULL,
 print.rawBlock <- function(x, width=NULL, machine=NULL,
                            sep1="  :  ", sep2="  |  ",
                            page=FALSE, ...) {
-    rawBlock <- as.character(x, width, machine, sep1, sep2)
+    rawBlock <- as.character(x, width=width, machine=machine,
+                             sep1=sep1, sep2=sep2)
     
     # View everything
     if (page) {

@@ -35,7 +35,7 @@ viewRaw(hexViewFile("rawTest.txt"), machine="binary", width=4)
 viewRaw(hexViewFile("rawTest.unicode"), width=8)
 
 viewRaw(hexViewFile("rawTest.int"), human="int")
-viewRaw(hexViewFile("rawTest.real"), human="real", width=8)
+viewRaw(hexViewFile("rawTest.real"), human="real", width=8, endian="big")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

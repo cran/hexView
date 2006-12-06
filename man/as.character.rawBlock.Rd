@@ -10,8 +10,8 @@
   the data in a human-readable format.
 }
 \usage{
-as.character.rawBlock(x, width = NULL, machine = NULL,
-                      sep1 = "  :  ", sep2 = "  |  ", ...)
+\method{as.character}{rawBlock}(x, width = NULL, machine = NULL,
+             sep1 = "  :  ", sep2 = "  |  ", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

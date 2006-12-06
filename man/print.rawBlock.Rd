@@ -12,8 +12,8 @@
   the call to \code{print}.
 }
 \usage{
-print.rawBlock(x, width = NULL, machine = NULL,
-               sep1 = "  :  ", sep2 = "  |  ", page = FALSE, ...)
+\method{print}{rawBlock}(x, width = NULL, machine = NULL,
+      sep1 = "  :  ", sep2 = "  |  ", page = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

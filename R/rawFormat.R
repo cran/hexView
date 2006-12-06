@@ -20,7 +20,7 @@ flattenFormat <- function(format) {
 as.character.rawFormat <- function(x, sep1="  :  ", sep2="  |  ", ...) {
     x$blocks <- flattenFormat(x$blocks)
     class(x) <- c("flatRawFormat", "rawFormat")
-    as.character(x, sep1, sep2, ...)
+    as.character(x, sep1=sep1, sep2=sep2, ...)
 }
 
 as.character.flatRawFormat <- function(x, sep1="  :  ", sep2="  |  ", ...) {
@@ -128,7 +128,7 @@ as.character.flatRawFormat <- function(x, sep1="  :  ", sep2="  |  ", ...) {
 
 print.rawFormat <- function(x, sep1="  :  ", sep2="  |  ",
                             page=FALSE, ...) {
-    rawFormat <- as.character(x, sep1, sep2)
+    rawFormat <- as.character(x, sep1=sep1, sep2=sep2)
     rawFormatNames <- names(rawFormat)
     
     # View everything

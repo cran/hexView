@@ -14,7 +14,7 @@
   the call to \code{print}.
 }
 \usage{
-print.rawFormat(x, sep1 = "  :  ", sep2 = "  |  ", page = FALSE, ...)
+\method{print}{rawFormat}(x, sep1 = "  :  ", sep2 = "  |  ", page = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

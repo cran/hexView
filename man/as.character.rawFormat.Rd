@@ -12,7 +12,7 @@
   is added for each block.
 }
 \usage{
-as.character.rawFormat(x, sep1 = "  :  ", sep2 = "  |  ", ...)
+\method{as.character}{rawFormat}(x, sep1 = "  :  ", sep2 = "  |  ", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
