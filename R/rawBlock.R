@@ -105,7 +105,7 @@ blockRaw <- function(block) {
     block$fileRaw
 }
 
-rawBlockTxt <- function(block) {
+rawBlockTxt <- function(block, showHuman=TRUE) {
     with(block,
          {
              # Format the machine output
@@ -135,12 +135,21 @@ rawBlockTxt <- function(block) {
                  bytesPerHuman <- 1
              } else { # int or real
                  fileCharTxt <- format(fileNum)
-        
+                 
                  humanFiller <- paste(rep(" ", nchar(fileCharTxt[1])),
                                       collapse="")
                  humanSep <- " "
                  bytesPerHuman <- size
              }
+             
+             # If not going to display the human column
+             # "zero" the strings
+             if (!showHuman) {
+                 fileCharTxt <- ""
+                 humanFiller <- ""
+                 humanSep <- ""
+             }
+             
              list(fileRawTxt=fileRawTxt, rawFiller=rawFiller,
                   fileCharTxt=fileCharTxt,
                   humanFiller=humanFiller, humanSep=humanSep,
@@ -148,10 +157,19 @@ rawBlockTxt <- function(block) {
          })
 }
 
-calculateWidth <- function(block, blockTxt, offsetRange, sep1, sep2) {
+calculateWidth <- function(block, blockTxt, offsetRange, sep1, sep2,
+                           showOffset=TRUE, showHuman=TRUE) {
     widthChars <- getOption("width")
-    ncharOffset <- nchar(format(offsetRange)[1])
-    ncharSeps <- nchar(sep1) + nchar(sep2)
+    ncharSeps <- 0
+    if (showOffset) {
+        ncharOffset <- nchar(format(offsetRange)[1])
+        ncharSeps <- ncharSeps + nchar(sep1)
+    } else {
+        ncharOffset <- 0
+    }
+    if (showHuman) {
+        ncharSeps <- ncharSeps + nchar(sep2)
+    }
     # includes " " sep
     ncharPerMachine <- nchar(blockTxt$rawFiller) + 1 
     ncharPerHuman <- nchar(blockTxt$humanFiller) + nchar(blockTxt$humanSep) 
@@ -163,10 +181,18 @@ calculateWidth <- function(block, blockTxt, offsetRange, sep1, sep2) {
 }
 
 blockStrings <- function(block, offsetCol, blockTxt, width,
-                         sep1, sep2, pad="") {
+                         sep1, sep2, pad="",
+                         showOffset=TRUE, showHuman=TRUE) {
     nrow <- block$nbytes %/% width
     if (block$nbytes %% width != 0)
         nrow <- nrow + 1
+
+    if (!showOffset) {
+        sep1 <- ""
+    }
+    if (!showHuman) {
+        sep2 <- ""
+    }
     
     rawVector <- rep(blockTxt$rawFiller, nrow*width)
     rawVector[1:block$nbytes] <- blockTxt$fileRawTxt
@@ -188,7 +214,8 @@ blockStrings <- function(block, offsetCol, blockTxt, width,
 }
 
 as.character.rawBlock <- function(x, width=NULL, machine=NULL,
-                                  sep1="  :  ", sep2="  |  ", ...) {
+                                  sep1="  :  ", sep2="  |  ",
+                                  showOffset=TRUE, showHuman=TRUE, ...) {
     if (!is.null(width))
         x$width <- width
     
@@ -205,29 +232,38 @@ as.character.rawBlock <- function(x, width=NULL, machine=NULL,
                  (width %% size != 0))
                  stop("Incompatible width and human format")
 
-             blockTxt <- rawBlockTxt(x)
+             blockTxt <- rawBlockTxt(x, showHuman)
              
              # If width is NULL, use options("width") to determine
              # width (to fit)
              if (is.null(width)) {
                  width <- calculateWidth(x, blockTxt,
                                          c(offset, offset + nbytes - 1),
-                                         sep1, sep2)
+                                         sep1, sep2,
+                                         showOffset, showHuman)
              }
              
-             # Format the offset 
-             offsetCol <- format(seq(offset, offset + nbytes - 1, by=width))
+             # Format the offset
+             if (showOffset) {
+                 offsetCol <- format(seq(offset, offset + nbytes - 1,
+                                         by=width))
+             } else {
+                 offsetCol <- ""
+             }
              
              # Put offset, machine text, and human text together
-             blockStrings(x, offsetCol, blockTxt, width, sep1, sep2)
+             blockStrings(x, offsetCol, blockTxt, width, sep1, sep2, 
+                          showOffset=showOffset, showHuman=showHuman)
          })
 }
 
 print.rawBlock <- function(x, width=NULL, machine=NULL,
                            sep1="  :  ", sep2="  |  ",
+                           showOffset=TRUE, showHuman=TRUE,
                            page=FALSE, ...) {
     rawBlock <- as.character(x, width=width, machine=machine,
-                             sep1=sep1, sep2=sep2)
+                             sep1=sep1, sep2=sep2,
+                             showOffset=showOffset, showHuman=showHuman)
     
     # View everything
     if (page) {

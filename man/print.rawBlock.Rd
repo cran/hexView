@@ -13,7 +13,9 @@
 }
 \usage{
 \method{print}{rawBlock}(x, width = NULL, machine = NULL,
-      sep1 = "  :  ", sep2 = "  |  ", page = FALSE, ...)
+      sep1 = "  :  ", sep2 = "  |  ",
+      showOffset = TRUE, showHuman = TRUE, 
+      page = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -25,6 +27,10 @@
     and the machine format.}
   \item{sep2}{ A separator to insert between the machine format
     and the human-readable format.}
+  \item{showOffset}{ If \code{FALSE}, the column of offsets is
+    not printed.}
+  \item{showHuman}{ If \code{FALSE}, the column of human-readable format is
+    not printed.}
   \item{page}{ If \code{TRUE} the output is sent to the
   file viewer specified by \code{getOption("pager")}.}
   \item{\dots}{ Other arguments to \code{print}. }

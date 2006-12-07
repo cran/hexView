@@ -11,7 +11,8 @@
 }
 \usage{
 \method{as.character}{rawBlock}(x, width = NULL, machine = NULL,
-             sep1 = "  :  ", sep2 = "  |  ", ...)
+             sep1 = "  :  ", sep2 = "  |  ",
+             showOffset = TRUE, showHuman = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,6 +24,10 @@
     and the machine format.}
   \item{sep2}{ A separator to insert between the machine format
     and the human-readable format.}
+  \item{showOffset}{ If \code{FALSE}, the column of offsets is
+    not included in the strings.}
+  \item{showHuman}{ If \code{FALSE}, the column of human-readable format is
+    not included in the strings.}
   \item{\dots}{ Other arguments to \code{as.character}. }
 }
 \details{
