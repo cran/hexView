@@ -13,8 +13,8 @@ markedBlock(marker=integer4,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{marker}{}
-  \item{switch}{}
+  \item{marker}{ A \code{"memBlock"} object. }
+  \item{switch}{ A function that returns a \code{"memBlock"} object. }
 }
 \details{
   A \code{"markedBlock"} object describes a block of binary data that consists

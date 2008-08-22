@@ -17,13 +17,16 @@ flattenFormat <- function(format) {
     flatFormat <- do.call("c", lapply(format, flattenBlock))
 }
 
-as.character.rawFormat <- function(x, sep1="  :  ", sep2="  |  ", ...) {
+as.character.rawFormat <- function(x, sep1="  :  ", sep2="  |  ",
+                                   blockHead=TRUE, blockChar="=", ...) {
     x$blocks <- flattenFormat(x$blocks)
     class(x) <- c("flatRawFormat", "rawFormat")
-    as.character(x, sep1=sep1, sep2=sep2, ...)
+    as.character(x, sep1=sep1, sep2=sep2,
+                 blockHead=blockHead, blockChar=blockChar, ...)
 }
 
-as.character.flatRawFormat <- function(x, sep1="  :  ", sep2="  |  ", ...) {
+as.character.flatRawFormat <- function(x, sep1="  :  ", sep2="  |  ",
+                                       blockHead=TRUE, blockChar="=", ...) {
     # Strip metadata from rawFormat to leave only a list
     # of rawBlock's
     formatOffset <- x$offset
@@ -123,15 +126,22 @@ as.character.flatRawFormat <- function(x, sep1="  :  ", sep2="  |  ", ...) {
     if (is.null(names(x$blocks))) {
         names(x$blocks) <- seq_along(x$blocks)
     }
-    names(formatStrings) <- paste(paste(rep("=", ncharOffset + nchar(sep1)),
-                                        collapse=""),
-                                  names(x$blocks), sep="")
+    if (blockHead) {
+        if (!is.character(blockHead))
+            blockHead <- paste(rep(blockChar,
+                                   ncharOffset + nchar(sep1)),
+                               collapse="")
+        names(formatStrings) <- paste(blockHead,
+                                      names(x$blocks), sep="")
+    }
     formatStrings
 }
 
 print.rawFormat <- function(x, sep1="  :  ", sep2="  |  ",
+                            blockHead=TRUE, blockChar="=",
                             page=FALSE, ...) {
-    rawFormat <- as.character(x, sep1=sep1, sep2=sep2)
+    rawFormat <- as.character(x, sep1=sep1, sep2=sep2,
+                              blockHead=blockHead, blockChar=blockChar)
     rawFormatNames <- names(rawFormat)
     
     # View everything

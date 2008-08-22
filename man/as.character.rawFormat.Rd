@@ -12,7 +12,8 @@
   is added for each block.
 }
 \usage{
-\method{as.character}{rawFormat}(x, sep1 = "  :  ", sep2 = "  |  ", ...)
+\method{as.character}{rawFormat}(x, sep1 = "  :  ", sep2 = "  |  ",
+                blockHead = TRUE, blockChar = "=", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,6 +22,10 @@
     and the machine format.}
   \item{sep2}{ A separator to insert between the machine format
     and the human-readable format.}
+  \item{blockHead}{ A logical indicating whether to print
+    a header between blocks of the format. }
+  \item{blockChar}{ The character used as a prefix to
+    the block names for printing headers between blocks. }
   \item{\dots}{ Other arguments to \code{as.character}. }
 }
 \details{

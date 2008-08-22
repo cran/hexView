@@ -14,7 +14,8 @@
   the call to \code{print}.
 }
 \usage{
-\method{print}{rawFormat}(x, sep1 = "  :  ", sep2 = "  |  ", page = FALSE, ...)
+\method{print}{rawFormat}(x, sep1 = "  :  ", sep2 = "  |  ",
+                  blockHead = TRUE, blockChar = "=", page = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,6 +24,10 @@
     and the machine format.}
   \item{sep2}{ A separator to insert between the machine format
     and the human-readable format.}
+  \item{blockHead}{ A logical indicating whether to print
+    a header between blocks of the format. }
+  \item{blockChar}{ The character used as a prefix to
+    the block names for printing headers between blocks. }
   \item{page}{ If \code{TRUE} the output is sent to the
     file viewer specified by \code{getOption("pager")}.}
   \item{\dots}{ Other arguments to \code{print}. }
