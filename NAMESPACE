@@ -34,4 +34,5 @@ S3method("as.character", "rawBlock")
 S3method("print", "rawFormat")
 S3method("as.character", "rawFormat")
 
+S3method("flattenBlock", "default")
 S3method("flattenBlock", "rawBlock")

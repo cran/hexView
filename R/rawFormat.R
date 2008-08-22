@@ -120,6 +120,9 @@ as.character.flatRawFormat <- function(x, sep1="  :  ", sep2="  |  ", ...) {
                                            width[[i]][1],
                                            sep1, sep2, pad[i])
     }
+    if (is.null(names(x$blocks))) {
+        names(x$blocks) <- seq_along(x$blocks)
+    }
     names(formatStrings) <- paste(paste(rep("=", ncharOffset + nchar(sep1)),
                                         collapse=""),
                                   names(x$blocks), sep="")
