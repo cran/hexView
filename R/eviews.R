@@ -51,7 +51,7 @@ readEViews <- function(filename, as.data.frame=TRUE) {
                                EViewsVbleInfo())
         vbleName <- blockString(vbleInfo$blocks$vblename)
         if (vbleName == "C" || vbleName == "RESID") {
-            cat("Skipping boilerplate variable\n")
+            warning("Skipping boilerplate variable\n")
         } else {
             Names[vbleCount] <- vbleName
             dataLoc <- blockValue(vbleInfo$blocks$ptrtodata)
