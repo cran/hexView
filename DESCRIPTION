@@ -1,12 +1,16 @@
 Package: hexView
-Version: 0.3-3
+Version: 0.3-4
 Title: Viewing Binary Files
-Author: Paul Murrell <paul@stat.auckland.ac.nz>
-Maintainer: Paul Murrell <paul@stat.auckland.ac.nz>
+Authors@R: c(person("Paul", "Murrell", role = c("aut", "cre"),
+		     email = "paul@stat.auckland.ac.nz"),
+	      person("Chao", "Bian", role = "ctb"))
 Depends: R (>= 1.8.0)
 Description: Functions to view files in raw binary form like in a hex editor.  Additional functions to specify and read arbitrary binary formats.
 License: GPL-2
-Packaged: 2014-12-16 20:02:23 UTC; EC\pmur002
 NeedsCompilation: no
+Packaged: 2019-03-13 01:16:15 UTC; pmur002
+Author: Paul Murrell [aut, cre],
+  Chao Bian [ctb]
+Maintainer: Paul Murrell <paul@stat.auckland.ac.nz>
 Repository: CRAN
-Date/Publication: 2014-12-17 10:59:27
+Date/Publication: 2019-03-13 06:20:15 UTC

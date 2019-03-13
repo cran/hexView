@@ -34,7 +34,16 @@ integer8 <- atomicBlock("int", size=8)
 real4 <- atomicBlock("real", size=4)
 real8 <- atomicBlock("real")
 
-
+## Needs special treatment because not natively supported
+## (in most places)
+integer3 <- function(width=NULL, machine="hex",
+                     endian="little", signed=TRUE) {
+    block <- list(type="int", width=width, machine=machine,
+                  size=3, endian=endian, signed=signed)
+    class(block) <- c("integer3", "atomicBlock", "memBlock")
+    block
+}
+    
 ASCIIline <- list()
 class(ASCIIline) <- c("ASCIIlineBlock", "memBlock")
 
@@ -48,8 +57,10 @@ vectorBlock <- function(block=ASCIIchar,
 
 # Vector block preceded by a block which gives the length of the vector
 lengthBlock <- function(length=integer4,
-                        block=ASCIIchar) {
-    block <- list(block=block, length=length)
+                        block=ASCIIchar,
+                        blockLabel="block") {
+    block <- list(block=block, length=length,
+                  blockLabel=blockLabel)
     class(block) <- c("lengthBlock", "memBlock")
     block    
 }
@@ -63,8 +74,10 @@ mixedBlock <- function(...) {
 # A block marker encodes the block to follow
 # The switch function decodes the marker and determines the block
 markedBlock <- function(marker=integer4,
-                        switch=function(marker) { ASCIIchar }) {
-    block <- list(marker=marker, switch=switch)
+                        switch=function(marker) { ASCIIchar },
+                        markerLabel="marker", blockLabel="block") {
+    block <- list(marker=marker, switch=switch,
+                  markerLabel=markerLabel, blockLabel=blockLabel)
     class(block) <- c("markedBlock", "memBlock")
     block    
 }
@@ -103,6 +116,27 @@ readMemBlock.atomicBlock <- function(block, file, offset) {
                       size, endian, signed))
 }
 
+readMemBlock.integer3 <- function(block, file, offset) {
+    ## Read as char ...
+    rawBlock <- with(block,
+                     readRawBlock(file, width, machine, "char", offset, size,
+                                  size, endian, signed))
+    ## ... then reset type and fill in numeric value
+    rawBlock$type <- "int"
+    ## Check sign
+    sign <- readBin(rawBlock$fileRaw, "integer", size=1)
+    if (sign < 0) {
+        ## Pad with FF
+        rawBlock$fileNum <- readBin(c(as.raw(2^8 - 1), rawBlock$fileRaw),
+                                    "integer", size=4, endian=block$endian)
+    } else {
+        ## Pad with 00
+        rawBlock$fileNum <- readBin(c(as.raw(0), rawBlock$fileRaw),
+                                    "integer", size=4, endian=block$endian)
+    }
+    rawBlock
+}
+
 readMemBlock.ASCIIlineBlock <- function(block, file, offset) {
     readASCIIline(file, offset)
 }
@@ -137,7 +171,9 @@ readMemBlock.lengthBlock <- function(block, file, offset) {
     offset <- seek(file, where=NA)
     vecBlock <- readVectorBlock(block$block, blockValue(lengthBlock),
                                 file, offset)
-    list(length=lengthBlock, vector=vecBlock)
+    result <- list(lengthBlock, vecBlock)
+    names(result) <- c("length", block$blockLabel)
+    result
 }
 
 readMemBlock.mixedBlock <- function(block, file, offset) {
@@ -146,7 +182,15 @@ readMemBlock.mixedBlock <- function(block, file, offset) {
 
 readMemBlock.markedBlock <- function(block, file, offset) {
     markerBlock <- readBlock(block$marker, file)
-    markedBlock <- readBlock(block$switch(markerBlock), file)
-    list(marker=markerBlock, block=markedBlock)
+    nextBlock <- block$switch(markerBlock)
+    if (is.null(nextBlock)) {
+        result <- list(markerBlock)
+        names(result) <- block$markerLabel
+    } else {
+        markedBlock <- readBlock(nextBlock, file)
+        result <- list(markerBlock, markedBlock)
+        names(result) <- c(block$markerLabel, block$blockLabel)
+    }
+    result
 }
 
